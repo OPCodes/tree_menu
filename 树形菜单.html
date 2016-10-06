@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+        <style>
+            #oUl li ul{
+                display: none;
+            }
+            #oUl li ul.show{
+                display: block;
+            }
+            #oUl li ul.hide{
+                display: none;
+            }
+            #oUl li h3 span{
+                padding: 0px 10px;
+            }
+            #oUl li h3.padL{
+                padding-left: 30px;
+            }
+            li{
+                list-style: none;
+            }
+        </style>
+        <script>
+
+        var arr = [
+            {
+            title : "第一级菜单",
+            child : [
+                {title:"第二级菜单"},
+                {title:"第二级菜单",
+                child:[
+                        {title:"第三级菜单"},
+                        {title:"第三级菜单",
+                        child:[
+                            {title:"第四级菜单"},
+                            {title:"第四级菜单"},
+                            {title:"第四级菜单"}
+                        ]
+                        },
+                        {title:"第三级菜单"}
+                    ]
+                },
+                {
+                    title:"第二级菜单",
+                    child:[
+                        {title:"第三级菜单"},
+                        {title:"第三级菜单"}
+                    ]
+                }
+            ]
+            },
+            {
+            title : "第一级菜单",
+            child : [
+                {title:"第二级菜单"},
+                {title:"第二级菜单",
+                child:[
+                        {title:"第三级菜单"},
+                        {title:"第三级菜单",
+                        child:[
+                            {title:"第四级菜单"},
+                            {title:"第四级菜单"},
+                            {title:"第四级菜单"}
+                        ]
+                        },
+                        {title:"第三级菜单"}
+                    ]
+                },
+                {
+                    title:"第二级菜单",
+                    child:[
+                        {title:"第三级菜单"},
+                        {title:"第三级菜单"}
+                    ]
+                }
+            ]
+            },
+            {
+            title:"第一级菜单"
+            }
+        ];
+
+        window.onload = function (){
+            
+            
+            var allH = oUl.getElementsByTagName("h2");
+            var allLis = oUl.children;
+
+            function fn(arr){
+                var str = "";
+                for( var i = 0; i < arr.length; i++ ){
+                    if( arr[i].title && arr[i].child ){
+                        str += "<li><h2>"+("+"+arr[i].title)+"</h2>";
+                    } else {
+                        str += "<li><h2>"+arr[i].title+"</h2>";
+                    }
+                    if( arr[i].child ){
+                        str += "<ul>";
+                        str += fn(arr[i].child);
+                        str += "</ul>"
+                    }
+                    str += "</li>";
+                }
+                return str;
+            }
+
+            oUl.innerHTML = fn(arr);
+
+            for( var i = 0; i < allH.length; i++ ){
+                allH[i].onOff = true;
+                allH[i].onclick = function (){
+                    if( this.nextElementSibling ){
+                        fn(this);
+                        if( this.onOff ){
+                            this.innerHTML = "-" + this.innerHTML.substring(1);
+                            this.nextElementSibling.style.display = "block";
+                        } else {
+                            this.innerHTML = "+" + this.innerHTML.substring(1);
+                            this.nextElementSibling.style.display = "none";
+                        }
+                        this.onOff = !this.onOff;
+                    }
+                }
+
+                function fn(obj){
+                    var aLi = obj.parentNode.parentNode.getElementsByTagName("li");
+                    for( var i = 0; i < aLi.length; i++ ){
+                        if( aLi[i].children && aLi[i].children.length >= 2 ){
+                            for( var j = 0; j < aLi[i].children.length; j++ ){
+                                if( aLi[i].children[j].nodeName.toLowerCase() === "h2" ){
+                                    if( aLi[i].children[j] !== obj ){
+                                        aLi[i].children[j].onOff = true;
+                                    }
+                                    aLi[i].children[j].innerHTML = "+" + aLi[i].children[j].innerHTML.substring(1);
+                                }
+                                if( aLi[i].children[j].nodeName.toLowerCase() === "ul" ){
+                                    aLi[i].children[j].style.display = "none";
+                                }
+                            }
+                        }
+                    }
+                }  
+            }
+        }
+
+        </script>
+    </head>
+
+    <body>
+        <ul id="oUl">
+            
+        </ul>
+    </body>
+</html>

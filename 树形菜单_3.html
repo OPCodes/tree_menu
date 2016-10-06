@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        #oUl li ul{
+            display: none;
+        }
+        #oUl li ul.show{
+            display: block;
+        }
+        #oUl li ul.hide{
+            display: none;
+        }
+        #oUl li h3 span{
+            padding: 0px 10px;
+        }
+        #oUl li h3.padL{
+            padding-left: 30px;
+        }
+        li{
+            list-style: none;
+        }
+    </style>
+    <script>
+    var arr = [
+        {
+            title : "第一级菜单",
+            child : [
+                {title:"第二级菜单"},
+                {title:"第二级菜单",
+                child:[
+                        {title:"第三级菜单"},
+                        {title:"第三级菜单",
+                        child:[
+                            {title:"第四级菜单"},
+                            {title:"第四级菜单"},
+                            {title:"第四级菜单"}
+                        ]
+                        },
+                        {title:"第三级菜单"}
+                    ]
+                },
+                {
+                    title:"第二级菜单",
+                    child:[
+                        {title:"第三级菜单"},
+                        {title:"第三级菜单"}
+                    ]
+                }
+            ]
+        },
+        {
+            title : "第一级菜单",
+            child : [
+                {title:"第二级菜单"},
+                {title:"第二级菜单",
+                child:[
+                        {title:"第三级菜单"},
+                        {title:"第三级菜单",
+                        child:[
+                            {title:"第四级菜单"},
+                            {title:"第四级菜单"},
+                            {title:"第四级菜单"}
+                        ]
+                        },
+                        {title:"第三级菜单"}
+                    ]
+                },
+                {
+                    title:"第二级菜单",
+                    child:[
+                        {title:"第三级菜单"},
+                        {title:"第三级菜单"}
+                    ]
+                }
+            ]
+        },
+        {
+            title:"第一级菜单"
+             
+        }
+    ];
+
+    window.onload = function (){
+
+        var oUl = document.getElementById("oUl");
+        
+        createHtml(arr,oUl);
+
+        // 生成HTML结构
+        function createHtml (obj,parent){
+
+            for( var i = 0; i < obj.length; i++ ){
+                var newLi = document.createElement("li");
+                var newH2 = document.createElement("h2");
+                var newSpan = document.createElement("span");
+                newSpan.innerHTML = "+";
+
+                if( obj[i].title ){
+                    newLi.appendChild(newH2);
+                }
+                // 判断有没有下一级菜单，有的话执行回掉，加到最后一级
+                if( obj[i].child ){
+                    var newUl = document.createElement("ul");
+                    newH2.appendChild(newSpan);
+                    createHtml(obj[i].child,newUl);
+                    newLi.appendChild(newUl);  // 把第二级以下的内容插入到第一级li
+                }
+
+                newH2.innerHTML += obj[i].title;
+
+                parent.appendChild(newLi);   // 最后插入父级中
+            }
+
+        }
+
+
+        var allH2 = oUl.getElementsByTagName("h2");
+
+        for( var i = 0; i < allH2.length; i++ ){
+            allH2[i].onclick = function (){
+
+                var nextSib = this.nextElementSibling;  
+                var firChild = this.firstElementChild;
+                var oUl = this.parentNode.parentNode;
+                var allUl = oUl.getElementsByTagName("ul");
+                var allSpan = oUl.getElementsByTagName("span");
+
+                // 循环所有Ul
+                for( var j = 0; j < allUl.length; j++ ){
+                    // 排除掉当前打开的菜单，让其他所有菜单隐藏
+                    if( allUl[j] !== nextSib ){
+                        allUl[j].style.display = "none";
+                        allSpan[j].innerHTML = "+";
+                    }
+                }
+
+                // 修改当前菜单的状态
+                if( nextSib ){
+                    if( nextSib.style.display === "block" ){
+                        nextSib.style.display = "none";
+                        firChild.innerHTML = "+";
+                    } else {
+                        nextSib.style.display = "block";
+                        firChild.innerHTML = "-";
+                    }
+                }
+            }
+        }
+    }
+
+    </script>
+</head>
+<body>
+    <ul id="oUl">
+        <!-- <li>
+            <h2></h2>
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </li> -->
+    </ul>
+</body>
+</html>
+    
